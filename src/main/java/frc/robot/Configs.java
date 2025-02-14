@@ -6,6 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Configs extends Command {
   /** Creates a new Configs. */
