@@ -22,8 +22,9 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  
   public static final class DriveConstants {
-    // Driving Parameters - Note that these are not the maximum capable speeds of
+    // Driving Parameters -  that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.0;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
@@ -45,16 +46,16 @@ public final class Constants {
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
-
+// your the best
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 9;
-    public static final int kRearLeftDrivingCanId = 13;
-    public static final int kFrontRightDrivingCanId = 3;
+    public static final int kFrontLeftDrivingCanId = 6;
+    public static final int kRearLeftDrivingCanId = 8;
+    public static final int kFrontRightDrivingCanId = 4;
     public static final int kRearRightDrivingCanId = 2;
 
-    public static final int kFrontLeftTurningCanId = 10;
-    public static final int kRearLeftTurningCanId = 14;
-    public static final int kFrontRightTurningCanId = 8 ;
+    public static final int kFrontLeftTurningCanId = 5;
+    public static final int kRearLeftTurningCanId = 7;
+    public static final int kFrontRightTurningCanId = 3;
     public static final int kRearRightTurningCanId = 1;
 
     public static final boolean kGyroReversed = false;
@@ -79,7 +80,13 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.1;
+
+   
+   
+      //public static final double kXDriveDeadband = 0.25;  //GF was .25
+      public static final double kTriggerButtonThreshold = 0.5;
+  
   }
 
   public static final class AutoConstants {
@@ -100,5 +107,106 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+
+  //Ella Vader (HAHAHAHA) Code beneath here
+
+  public static class MotorConstants {
+    public static final int kSparkMaxElevatorMotor1CANID = 10;
+    public static final int kSparkMaxElevatorMotor2CANID = 9;
+
+    public static final int kSparkMaxElevatorMotorsCurrentLimit = 40;
+    public static final double kSparkMaxElevatorMotorsSpeed = .65;
+    public static final double kSparkMaxElevatorMotorsMaxSpeed = 0.95;
+
+
+    public static final int kIntakeMotorsCurrentLimit = 40;
+    public static final double kIntakeMotorsSpeed = .5;
+    public static final double kIntakeMotorsMaxSpeed = .6;
+    
+    public static final double kWristIntakeSpeed = .18;
+    public static final double kWristScoreSpeed = -0.33;
+
+    public static final double kSparkMaxWristMotorsSpeed = .2;
+    public static final double kSparkMaxWristMotorsMaxSpeed = 0.3;
+    public static final double kWristHomePosition = 0.0;
+    public static final double kScoringPosition = 10.0;
+    public static final double kIntakePosition = 5.0;
+
+  }
+
+
+  public static final class IntakeSubsystemConstants {
+    public static final int kAlgaeLeftCanId = 12;
+    public static final int kAlgaeRightCanId= 11;
+    public static final int kWristCanId = 13;
+    public static final int kCoralCanId = 14;
+
+  }
+
+  public static final class ClimbConstants{
+    public static final int kClimbMotorLeftCANID  = 16;
+    public static final int kClimbMotorRightCANID = 15; 
+
+    public static final int kSparkMaxClimberMotorsCurrentLimit = 40;
+    public static final double kSparkMaxClimberMotorsSpeed = .35;
+    public static final double kSparkMaxClimberMotorsMaxSpeed = 0.65;
+    public static final int kClimbMotorsCurrentLimit = 40;
+
+  }
+
+  public static final class Levels{
+   // public static final int kCoralL1Height= ;
+   // public static final int kCoralL2Height = ;
+  //  public static final int kCoralL3Height = ;
+   // public static final int kCoralL4Height = ;
+   // public static final int kIntakeHeight = ;
+
+    public static final int ElevatorHomeHeight = 0;
+   // public static final int AlgaeL1Height = ;
+    public static final int AlgaeL2Height = 54;
+
+
+   // public static final TrapezoidProfile.Constraints kElevatorMotionConstraints =
+   // new TrapezoidProfile.Constraints(1.0, 2.0);
+   }
+    public static final double kMaxElevatorHeight = 68;
+    public static final double kMinElevatorHeight = 0;
+
+     private static final double ElevatorKp = 0.1;
+   
+   public static double controlLoop(double measurement, double setpoint){
+   double error = setpoint - measurement;
+   double output = error * ElevatorKp;  
+
+   //Feed Forward
+   //Helps account for gravity
+   double feedForward = 0.1;
+   output = output + feedForward;
+
+   //Tolerance
+   //Lets feed forward NOT continuously take power.
+   double tolerance = 0.5; //Tolerance for control loop in inches
+   if (Math.abs(error) < Units.inchesToMeters(tolerance)){
+     output = 0;
+   }
+
+       //Minimum Output
+       double sign = Math.signum(output);
+       double minOutput = 0.05;
+       if (Math.abs(output) < minOutput){
+         output = minOutput * sign;
+       }
+   
+       //Min and max values
+       //If we are at our min value don't let us drive down, if we are at max don't let us drive up
+       if (output < (0 + feedForward) && measurement < kMinElevatorHeight){
+         output = 0;
+       }
+       if (output > 0 && measurement > kMaxElevatorHeight ){
+         output = 0;
+       }
+   return output;
+}
 
 }

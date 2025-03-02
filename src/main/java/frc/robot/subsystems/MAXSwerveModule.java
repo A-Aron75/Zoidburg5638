@@ -21,7 +21,7 @@ import frc.robot.Configs;
 
 /** Add your docs here. */
 public class MAXSwerveModule {
-    private final SparkMax m_drivingSpark;
+  private final SparkMax m_drivingSpark;
   private final SparkMax m_turningSpark;
 
   private final RelativeEncoder m_drivingEncoder;
